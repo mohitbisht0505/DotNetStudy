@@ -22,5 +22,15 @@ namespace web_API.Controllers
             db.SaveChanges();
             return Ok();
         }
+
+        [HttpGet]
+        [Route(template: "ViewPlayer")]
+
+        public IActionResult ViewPlayer()
+        {
+           var lstPlayer = db.iplPlayer.ToList();
+            
+                return Ok(lstPlayer);
+        }
     }
 }
