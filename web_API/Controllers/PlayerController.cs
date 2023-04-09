@@ -14,6 +14,19 @@ namespace web_API.Controllers
         {
             this.db = db;
         }
+
+        //Retrieve data or View data
+        [HttpGet]
+        [Route(template: "ViewPlayer")]
+
+        public IActionResult ViewPlayer()
+        {
+            var lstPlayer = db.iplPlayer.ToList();
+
+            return Ok(lstPlayer);
+        }
+
+        //Add new data
         [HttpPost]
         [Route(template:"AddPlayer")]
         public IActionResult AddPlayer(IplPlayer players)
@@ -23,14 +36,47 @@ namespace web_API.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        [Route(template: "ViewPlayer")]
+        //Update Data
+        [HttpPut]
+        [Route(template:"UpdatePlayer")]
 
-        public IActionResult ViewPlayer()
+        public IActionResult UpdatePlayer(IplPlayer player)
         {
-           var lstPlayer = db.iplPlayer.ToList();
-            
-                return Ok(lstPlayer);
+            var data = db.iplPlayer.FirstOrDefault(x => x.Id == player.Id);
+            if (data != null)
+            {
+                data.Name = player.Name;
+                data.TeamName = player.TeamName;
+                db.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
+        //Delete data
+        [HttpDelete]
+        [Route("DeleteData")]
+        
+        public IActionResult DeleteData(Guid id)
+        {
+            IplPlayer player;
+            var data = db.iplPlayer.FirstOrDefault(x => x.Id == id);
+            if (data != null)
+            {
+                db.iplPlayer.Remove(data);
+                db.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        
+        
+
     }
 }
